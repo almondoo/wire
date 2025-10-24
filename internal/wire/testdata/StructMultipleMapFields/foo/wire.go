@@ -17,7 +17,7 @@
 
 package main
 
-import "github.com/almonddo/wire"
+import "github.com/almondoo/wire"
 
 func inject() *Cache {
 	wire.Build(wire.Struct(new(Cache), "*"), ProvideMap)

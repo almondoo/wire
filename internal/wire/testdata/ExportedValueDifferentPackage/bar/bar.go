@@ -17,7 +17,7 @@ package bar
 import (
 	"os"
 
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 var Value = wire.Value(os.Stdout)

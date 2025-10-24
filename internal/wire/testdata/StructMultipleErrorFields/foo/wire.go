@@ -17,7 +17,7 @@
 
 package main
 
-import "github.com/almonddo/wire"
+import "github.com/almondoo/wire"
 
 func inject() *Result {
 	wire.Build(wire.Struct(new(Result), "*"), ProvideError)

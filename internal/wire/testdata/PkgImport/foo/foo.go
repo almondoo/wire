@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"example.com/bar"
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 func main() {

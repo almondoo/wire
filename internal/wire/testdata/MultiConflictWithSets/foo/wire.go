@@ -17,7 +17,7 @@
 
 package main
 
-import "github.com/almonddo/wire"
+import "github.com/almondoo/wire"
 
 func inject() *Foo {
 	wire.Build(Set1, Set2)

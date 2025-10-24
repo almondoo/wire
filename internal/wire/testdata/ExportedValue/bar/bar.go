@@ -14,7 +14,7 @@
 
 package bar
 
-import "github.com/almonddo/wire"
+import "github.com/almondoo/wire"
 
 var Value = wire.Value(PublicMsg)
 

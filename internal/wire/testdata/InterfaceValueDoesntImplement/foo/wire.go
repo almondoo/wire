@@ -20,7 +20,7 @@ package main
 import (
 	"io"
 
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 func injectedMessage() string {

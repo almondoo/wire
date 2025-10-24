@@ -20,7 +20,7 @@ package main
 import (
 	stdcontext "context"
 
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 func inject(context stdcontext.Context, err struct{}) (context, error) {

@@ -19,7 +19,7 @@ package main
 
 import (
 	"example.com/bar"
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 func injectedMessage() string {

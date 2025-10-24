@@ -21,7 +21,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 func inject() io.Writer {

@@ -18,7 +18,7 @@
 package main
 
 import (
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 func injectedMessage(t title, lines ...string) string {

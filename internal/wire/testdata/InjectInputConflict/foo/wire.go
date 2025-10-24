@@ -18,7 +18,7 @@
 package main
 
 import (
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 func injectBar(foo Foo) Bar {

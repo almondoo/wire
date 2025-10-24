@@ -18,7 +18,7 @@
 package main
 
 import (
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 /* blockComment returns Foo and has a /*- style doc comment */

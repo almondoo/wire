@@ -20,7 +20,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 func injectStringer(s MyString) fmt.Stringer {

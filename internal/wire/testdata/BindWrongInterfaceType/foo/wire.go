@@ -17,7 +17,7 @@
 
 package main
 
-import "github.com/almonddo/wire"
+import "github.com/almondoo/wire"
 
 func inject() Fooer {
 	wire.Build(ProvideBar, wire.Bind(new(Fooer), new(*MyBar)))

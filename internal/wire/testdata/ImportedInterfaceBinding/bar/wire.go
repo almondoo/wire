@@ -19,7 +19,7 @@ package main
 
 import (
 	"example.com/foo"
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 func injectFooer() foo.Fooer {

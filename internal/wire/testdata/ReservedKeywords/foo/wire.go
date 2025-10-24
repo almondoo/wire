@@ -18,7 +18,7 @@
 package main
 
 import (
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 // Wire tries to disambiguate the variable "select" by prepending

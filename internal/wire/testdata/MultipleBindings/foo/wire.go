@@ -20,7 +20,7 @@ package main
 import (
 	"strings"
 
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 func inject() Foo {

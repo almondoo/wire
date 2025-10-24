@@ -547,7 +547,7 @@ func (test *testCase) materialize(gopath string) error {
 
 	// Add go.mod files to example.com and github.com/google/wire.
 	const importPath = "example.com"
-	const depPath = "github.com/almonddo/wire"
+	const depPath = "github.com/almondoo/wire"
 	depLoc := filepath.Join(gopath, "src", filepath.FromSlash(depPath))
 	example := fmt.Sprintf("module %s\n\nrequire %s v0.1.0\nreplace %s => %s\n", importPath, depPath, depPath, depLoc)
 	gomod := filepath.Join(gopath, "src", filepath.FromSlash(importPath), "go.mod")

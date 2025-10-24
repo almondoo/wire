@@ -17,7 +17,7 @@
 
 package main
 
-import "github.com/almonddo/wire"
+import "github.com/almondoo/wire"
 
 var UnusedSet = wire.NewSet(ProvideFoo)
 var UsedSet = wire.NewSet(ProvideFoo)

@@ -23,7 +23,7 @@ import (
 	"example.com/bar"
 	"example.com/baz"
 	"example.com/foo"
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 func newBazService() *baz.Service {

@@ -1,6 +1,6 @@
-module github.com/almonddo/wire
+module github.com/almondoo/wire
 
-go 1.20
+go 1.19
 
 require (
 	github.com/google/go-cmp v0.6.0

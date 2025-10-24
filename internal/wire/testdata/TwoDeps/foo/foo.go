@@ -17,7 +17,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/almonddo/wire"
+	"github.com/almondoo/wire"
 )
 
 func main() {
