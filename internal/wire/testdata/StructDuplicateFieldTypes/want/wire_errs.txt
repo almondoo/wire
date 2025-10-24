@@ -1,0 +1,1 @@
+example.com/foo/foo.go:x:y: provider struct has multiple fields of type string
