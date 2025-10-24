@@ -1,0 +1,45 @@
+# Git関連
+.git
+.github
+.gitattributes
+
+# Docker関連
+docker-compose.yml
+.dockerignore
+Dockerfile*
+
+# ドキュメント
+*.md
+docs/
+_tutorial/JP_README.md
+
+# テストデータ
+internal/wire/testdata/
+
+# ビルド成果物
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+wire
+
+# テスト関連
+*.test
+*.out
+
+# IDE設定
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS関連
+.DS_Store
+Thumbs.db
+
+# その他
+*.log
+tmp/
+temp/

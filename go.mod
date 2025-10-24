@@ -1,4 +1,4 @@
-module github.com/google/wire
+module github.com/almonddo/wire
 
 go 1.19
 
