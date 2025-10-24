@@ -7,11 +7,10 @@
 package main
 
 import (
-	"fmt"
-
 	"example.com/bar"
 	"example.com/baz"
 	"example.com/foo"
+	"fmt"
 )
 
 // Injectors from wire.go:

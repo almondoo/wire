@@ -90,6 +90,8 @@ services:
       - go-build-cache:/root/.cache/go-build
     working_dir: /workspace
     command: go test -v ./...
+    # ゴールデンファイルを更新する場合は上記コマンドを以下に変更
+    # command: go test -v ./... -record
     depends_on:
       wire-dev:
         condition: service_started
