@@ -1,0 +1,1 @@
+example.com/foo/foo.go:x:y: wrong signature for provider ProvideTooMany: too many return values
