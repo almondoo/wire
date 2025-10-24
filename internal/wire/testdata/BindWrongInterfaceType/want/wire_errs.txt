@@ -1,0 +1,1 @@
+example.com/foo/wire.go:x:y: *example.com/foo.MyBar does not implement example.com/foo.Fooer

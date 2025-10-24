@@ -1,0 +1,11 @@
+example.com/foo/wire.go:x:y: multiple bindings for *example.com/foo.Foo
+current:
+<- provider "ProvideFoo2" (example.com/foo/foo.go:x:y)
+previous:
+<- provider "ProvideFoo1" (example.com/foo/foo.go:x:y)
+
+example.com/foo/wire.go:x:y: multiple bindings for *example.com/foo.Foo
+current:
+<- provider "ProvideFoo3" (example.com/foo/foo.go:x:y)
+previous:
+<- provider "ProvideFoo1" (example.com/foo/foo.go:x:y)
