@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/google/wire"
+	"github.com/almonddo/wire"
 )
 
 func main() {

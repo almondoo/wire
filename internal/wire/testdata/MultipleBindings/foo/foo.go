@@ -18,7 +18,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/google/wire"
+	"github.com/almonddo/wire"
 )
 
 type context struct{}
