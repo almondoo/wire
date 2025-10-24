@@ -31,7 +31,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/almonddo/wire/internal/wire"
+	"github.com/almondoo/wire/internal/wire"
 	"github.com/google/subcommands"
 	"github.com/pmezard/go-difflib/difflib"
 	"golang.org/x/tools/go/types/typeutil"
