@@ -3,10 +3,9 @@
 [![Build Status](https://github.com/google/wire/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/google/wire/actions)
 [![godoc](https://godoc.org/github.com/google/wire?status.svg)][godoc]
 
-> [!WARNING]
-> このプロジェクトはメンテナンスされなくなりました。
->
-> Wireを更新または拡張したい場合は、フォークして実施してください。
+> [!NOTE]
+> これは[google/wire](https://github.com/google/wire)のメンテナンスフォークです。
+> 元のプロジェクトはメンテナンスされなくなりましたが、このフォークでは継続的にアップデートと改善を提供しています。
 
 Wireは、[依存性注入][]を使用してコンポーネントを接続する作業を自動化するコード生成ツールです。コンポーネント間の依存関係はWireでは関数パラメータとして表現され、グローバル変数ではなく明示的な初期化が推奨されます。Wireは実行時の状態やリフレクションなしで動作するため、Wireで使用するために書かれたコードは、手書きの初期化にも有用です。
 
@@ -22,7 +21,7 @@ Wireは、[依存性注入][]を使用してコンポーネントを接続する
 次のコマンドを実行してWireをインストールします：
 
 ```shell
-go install github.com/google/wire/cmd/wire@latest
+go install github.com/almondoo/wire/cmd/wire@latest
 ```
 
 そして、`$GOPATH/bin`が`$PATH`に追加されていることを確認してください。
