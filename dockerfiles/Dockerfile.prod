@@ -1,0 +1,45 @@
+# 本番用Dockerfile（マルチステージビルド）
+# ステージ1: ビルド環境
+FROM golang:1.19-alpine AS builder
+
+# 必要なパッケージのインストール
+RUN apk add --no-cache \
+    git \
+    gcc \
+    musl-dev
+
+# 作業ディレクトリの設定
+WORKDIR /build
+
+# go.modとgo.sumをコピーして依存関係をキャッシュ
+COPY go.mod go.sum ./
+RUN go mod download
+
+# ソースコードをコピー
+COPY . .
+
+# Wireツールのビルド
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /wire ./cmd/wire
+
+# ステージ2: 実行環境
+FROM alpine:latest
+
+# 必要な最小限のパッケージのインストール
+RUN apk add --no-cache ca-certificates
+
+# 非rootユーザーの作成
+RUN addgroup -g 1000 wire && \
+    adduser -D -u 1000 -G wire wire
+
+# 作業ディレクトリの設定
+WORKDIR /app
+
+# ビルドステージからバイナリをコピー
+COPY --from=builder /wire /usr/local/bin/wire
+
+# 非rootユーザーに切り替え
+USER wire
+
+# エントリーポイントの設定
+ENTRYPOINT ["wire"]
+CMD ["--help"]

@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//+build wireinject
+//go:build wireinject
+// +build wireinject
 
 package main
 
-import "github.com/google/wire"
+import "github.com/almondoo/wire"
 
 func inject() *Service {
 	wire.Build(ProvideService1, ProvideService2, ProvideService3, ProvideService4)

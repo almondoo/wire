@@ -1,0 +1,26 @@
+# 開発用Dockerfile
+FROM golang:1.19-alpine
+
+# 必要なパッケージのインストール
+RUN apk add --no-cache \
+    git \
+    make \
+    bash \
+    gcc \
+    musl-dev
+
+# 作業ディレクトリの設定
+WORKDIR /workspace
+
+# go.modとgo.sumをコピーして依存関係をキャッシュ
+COPY go.mod go.sum ./
+RUN go mod download
+
+# ソースコードをコピー
+COPY . .
+
+# Wireツールのインストール
+RUN go install github.com/almondoo/wire/cmd/wire@latest
+
+# デフォルトコマンド
+CMD ["/bin/bash"]

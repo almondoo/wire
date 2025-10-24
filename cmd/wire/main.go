@@ -14,7 +14,7 @@
 
 // Wire is a compile-time dependency injection tool.
 //
-// For an overview, see https://github.com/google/wire/blob/master/README.md
+// For an overview, see https://github.com/almondoo/wire/blob/master/README.md
 package main
 
 import (
@@ -31,8 +31,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/almondoo/wire/internal/wire"
 	"github.com/google/subcommands"
-	"github.com/google/wire/internal/wire"
 	"github.com/pmezard/go-difflib/difflib"
 	"golang.org/x/tools/go/types/typeutil"
 )

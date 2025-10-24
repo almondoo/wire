@@ -20,7 +20,7 @@ func main() {
 	fmt.Println(inject())
 }
 
-import "github.com/google/wire"
+import "github.com/almondoo/wire"
 
 type Foo struct{}
 func ProvideFoo1() *Foo { return &Foo{} }
