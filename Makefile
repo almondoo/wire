@@ -1,4 +1,4 @@
-.PHONY: help dev prod tutorial test watch watch-dev watch-tutorial up down logs build clean shell shell-tutorial shell-test wire version ps restart
+.PHONY: help dev prod tutorial test watch watch-dev watch-tutorial up down logs build clean shell shell-tutorial shell-test wire version ps restart test-all-versions generate-version-errs generate-current-version-err
 
 # デフォルトターゲット
 .DEFAULT_GOAL := help
@@ -90,9 +90,25 @@ test-bench: ## ベンチマークを実行
 	@echo "$(GREEN)ベンチマークを実行中...$(RESET)"
 	docker compose run --rm wire-test go test -bench=. ./...
 
+test-all-versions: ## 全Goバージョンでテストを実行
+	@echo "$(GREEN)全Goバージョンでテストを実行中...$(RESET)"
+	cd internal/wire && ./test_all_versions.sh
+
 shell-test: ## テスト環境のシェルに接続
 	@echo "$(CYAN)テスト環境シェルに接続中...$(RESET)"
 	docker compose run --rm wire-test bash
+
+##@ バージョン別エラーファイル管理
+
+generate-version-errs: ## 全Goバージョン用のwire_errs.txtを生成
+	@echo "$(GREEN)全Goバージョン用のエラーファイルを生成中...$(RESET)"
+	cd internal/wire && ./generate_version_errs.sh
+	@echo "$(GREEN)生成完了$(RESET)"
+
+generate-current-version-err: ## 現在のGoバージョン用のwire_errs.txtを生成
+	@echo "$(GREEN)現在のGoバージョン用のエラーファイルを生成中...$(RESET)"
+	cd internal/wire && go test -run TestWire -record
+	@echo "$(GREEN)生成完了$(RESET)"
 
 ##@ Watch機能
 

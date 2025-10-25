@@ -25,6 +25,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"unicode"
@@ -34,6 +35,35 @@ import (
 )
 
 var record = flag.Bool("record", false, "whether to run tests against cloud resources and record the interactions")
+
+// getGoVersion returns the major.minor version of the current Go runtime (e.g., "1.22")
+func getGoVersion() string {
+	version := runtime.Version()
+	// version format: "go1.22.4" or "go1.23.0"
+	if !strings.HasPrefix(version, "go") {
+		return ""
+	}
+	version = strings.TrimPrefix(version, "go")
+	parts := strings.Split(version, ".")
+	if len(parts) < 2 {
+		return ""
+	}
+	return parts[0] + "." + parts[1]
+}
+
+// getVersionedErrorFile returns the path to the version-specific wire_errs.txt file.
+// It first tries to find a file specific to the current Go version (e.g., wire_errs_go1.22.txt),
+// and falls back to the generic wire_errs.txt if not found.
+func getVersionedErrorFile(root string) string {
+	goVersion := getGoVersion()
+	if goVersion != "" {
+		versionedPath := filepath.Join(root, "want", "wire_errs_go"+goVersion+".txt")
+		if _, err := os.Stat(versionedPath); err == nil {
+			return versionedPath
+		}
+	}
+	return filepath.Join(root, "want", "wire_errs.txt")
+}
 
 func TestWire(t *testing.T) {
 	const testRoot = "testdata"
@@ -112,7 +142,14 @@ func TestWire(t *testing.T) {
 					t.Fatal("Did not expect errors. To -record an error, create want/wire_errs.txt.")
 				}
 				if *record {
-					wireErrsFile := filepath.Join(testRoot, test.name, "want", "wire_errs.txt")
+					// Write version-specific error file
+					goVersion := getGoVersion()
+					var wireErrsFile string
+					if goVersion != "" {
+						wireErrsFile = filepath.Join(testRoot, test.name, "want", "wire_errs_go"+goVersion+".txt")
+					} else {
+						wireErrsFile = filepath.Join(testRoot, test.name, "want", "wire_errs.txt")
+					}
 					if err := ioutil.WriteFile(wireErrsFile, []byte(strings.Join(gotErrStrings, "\n\n")), 0666); err != nil {
 						t.Fatalf("failed to write wire_errs.txt file: %v", err)
 					}
@@ -472,7 +509,9 @@ func loadTestCase(root string, wireGoSrc []byte) (*testCase, error) {
 	header, _ := ioutil.ReadFile(filepath.Join(root, "header"))
 	var wantProgramOutput []byte
 	var wantWireOutput []byte
-	wireErrb, err := ioutil.ReadFile(filepath.Join(root, "want", "wire_errs.txt"))
+	// Try to load version-specific error file first, then fall back to generic
+	wireErrsPath := getVersionedErrorFile(root)
+	wireErrb, err := ioutil.ReadFile(wireErrsPath)
 	wantWireError := err == nil
 	var wantWireErrorStrings []string
 	if wantWireError {

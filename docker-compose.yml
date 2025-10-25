@@ -89,7 +89,7 @@ services:
       - go-mod-cache:/go/pkg/mod
       - go-build-cache:/root/.cache/go-build
     working_dir: /workspace
-    command: go test -v ./...
+    command: go test -mod=readonly -race ./...
     # 生成されるコードの内容を意図的に変えた場合はゴールデンファイルを更新するのが下記コマンド
     # command: go test -v ./... -record
     depends_on:
