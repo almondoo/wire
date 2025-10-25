@@ -1,4 +1,4 @@
-.PHONY: help dev prod tutorial test watch watch-dev watch-tutorial up down logs build clean shell shell-tutorial shell-test wire version ps restart test-all-versions generate-version-errs generate-current-version-err
+.PHONY: help dev up down logs build clean shell version ps restart test test-verbose test-cover test-bench test-all-versions generate-version-errs install-wire go-mod-download go-mod-tidy fmt vet lint quickstart
 
 # デフォルトターゲット
 .DEFAULT_GOAL := help
@@ -25,78 +25,31 @@ dev: ## 開発環境を起動
 	@echo "$(GREEN)開発環境が起動しました$(RESET)"
 	@echo "シェルに接続: make shell"
 
-watch-dev: ## 開発環境をWatchモードで起動
-	@echo "$(GREEN)開発環境をWatchモードで起動中...$(RESET)"
-	docker compose watch wire-dev
-
 shell: ## 開発環境のシェルに接続
 	@echo "$(CYAN)開発環境シェルに接続中...$(RESET)"
 	docker compose exec wire-dev bash
 
-##@ チュートリアル環境
-
-tutorial: ## チュートリアル環境を起動
-	@echo "$(GREEN)チュートリアル環境を起動中...$(RESET)"
-	docker compose up -d wire-tutorial
-	@echo "$(GREEN)チュートリアル環境が起動しました$(RESET)"
-	@echo "シェルに接続: make shell-tutorial"
-
-watch-tutorial: ## チュートリアル環境をWatchモードで起動
-	@echo "$(GREEN)チュートリアル環境をWatchモードで起動中...$(RESET)"
-	docker compose watch wire-tutorial
-
-shell-tutorial: ## チュートリアル環境のシェルに接続
-	@echo "$(CYAN)チュートリアル環境シェルに接続中...$(RESET)"
-	docker compose exec wire-tutorial bash
-
-run-tutorial: ## チュートリアルを実行
-	@echo "$(GREEN)チュートリアルを実行中...$(RESET)"
-	docker compose exec wire-tutorial go run main.go wire.go
-
-##@ 本番環境
-
-prod: ## 本番環境をビルド
-	@echo "$(GREEN)本番環境をビルド中...$(RESET)"
-	docker compose build wire-prod
-
-wire: ## Wireコマンドを実行（引数: ARGS="..."）
-	@echo "$(GREEN)Wireコマンドを実行中...$(RESET)"
-	docker compose run --rm wire-prod $(ARGS)
-
-wire-help: ## Wireのヘルプを表示
-	@echo "$(CYAN)Wireヘルプ:$(RESET)"
-	docker compose run --rm wire-prod --help
-
-wire-gen: ## 現在のディレクトリでWireコード生成
-	@echo "$(GREEN)Wireコード生成中...$(RESET)"
-	docker compose run --rm wire-prod wire
-	@echo "$(GREEN)コード生成が完了しました$(RESET)"
-
-##@ テスト環境
+##@ テスト
 
 test: ## テストを実行
 	@echo "$(GREEN)テストを実行中...$(RESET)"
-	docker compose run --rm wire-test
+	docker compose exec wire-dev go test -mod=readonly -race ./...
 
 test-verbose: ## 詳細モードでテストを実行
 	@echo "$(GREEN)テスト（詳細モード）を実行中...$(RESET)"
-	docker compose run --rm wire-test go test -v ./...
+	docker compose exec wire-dev go test -v ./...
 
 test-cover: ## カバレッジ付きでテストを実行
 	@echo "$(GREEN)カバレッジ付きテストを実行中...$(RESET)"
-	docker compose run --rm wire-test go test -cover ./...
+	docker compose exec wire-dev go test -cover ./...
 
 test-bench: ## ベンチマークを実行
 	@echo "$(GREEN)ベンチマークを実行中...$(RESET)"
-	docker compose run --rm wire-test go test -bench=. ./...
+	docker compose exec wire-dev go test -bench=. ./...
 
 test-all-versions: ## 全Goバージョンでテストを実行
 	@echo "$(GREEN)全Goバージョンでテストを実行中...$(RESET)"
 	cd internal/wire && ./test_all_versions.sh
-
-shell-test: ## テスト環境のシェルに接続
-	@echo "$(CYAN)テスト環境シェルに接続中...$(RESET)"
-	docker compose run --rm wire-test bash
 
 ##@ バージョン別エラーファイル管理
 
@@ -105,70 +58,37 @@ generate-version-errs: ## 全Goバージョン用のwire_errs.txtを生成
 	cd internal/wire && ./generate_version_errs.sh
 	@echo "$(GREEN)生成完了$(RESET)"
 
-generate-current-version-err: ## 現在のGoバージョン用のwire_errs.txtを生成
-	@echo "$(GREEN)現在のGoバージョン用のエラーファイルを生成中...$(RESET)"
-	cd internal/wire && go test -run TestWire -record
-	@echo "$(GREEN)生成完了$(RESET)"
-
-##@ Watch機能
-
-watch: ## すべてのサービスをWatchモードで起動
-	@echo "$(GREEN)すべてのサービスをWatchモードで起動中...$(RESET)"
-	docker compose watch
-
-watch-logs: ## Watchモード（ログ分離）
-	@echo "$(GREEN)Watchモードを起動中（ログ分離）...$(RESET)"
-	docker compose up -d
-	docker compose watch
-
 ##@ Docker Compose基本操作
 
-up: ## すべてのサービスを起動
-	@echo "$(GREEN)すべてのサービスを起動中...$(RESET)"
+up: ## 開発環境を起動
+	@echo "$(GREEN)開発環境を起動中...$(RESET)"
 	docker compose up -d
-	@echo "$(GREEN)サービスが起動しました$(RESET)"
+	@echo "$(GREEN)開発環境が起動しました$(RESET)"
 	@$(MAKE) ps
 
-down: ## すべてのサービスを停止・削除
-	@echo "$(RED)すべてのサービスを停止中...$(RESET)"
+down: ## 開発環境を停止・削除
+	@echo "$(RED)開発環境を停止中...$(RESET)"
 	docker compose down
-	@echo "$(RED)サービスが停止しました$(RESET)"
+	@echo "$(RED)開発環境が停止しました$(RESET)"
 
-restart: ## すべてのサービスを再起動
-	@echo "$(YELLOW)すべてのサービスを再起動中...$(RESET)"
+restart: ## 開発環境を再起動
+	@echo "$(YELLOW)開発環境を再起動中...$(RESET)"
 	docker compose restart
-	@echo "$(GREEN)サービスが再起動しました$(RESET)"
+	@echo "$(GREEN)開発環境が再起動しました$(RESET)"
 
 ps: ## 実行中のコンテナを表示
 	@echo "$(CYAN)実行中のコンテナ:$(RESET)"
 	@docker compose ps
 
-logs: ## ログを表示（引数: SERVICE=wire-dev）
+logs: ## ログを表示
 	@echo "$(CYAN)ログを表示中...$(RESET)"
-	docker compose logs -f $(SERVICE)
-
-logs-dev: ## 開発環境のログを表示
-	@$(MAKE) logs SERVICE=wire-dev
-
-logs-tutorial: ## チュートリアル環境のログを表示
-	@$(MAKE) logs SERVICE=wire-tutorial
-
-logs-test: ## テスト環境のログを表示
-	@$(MAKE) logs SERVICE=wire-test
+	docker compose logs -f wire-dev
 
 ##@ ビルド操作
 
-build: ## すべてのイメージをビルド
-	@echo "$(GREEN)すべてのイメージをビルド中...$(RESET)"
-	docker compose build
-
-build-dev: ## 開発環境イメージをビルド
+build: ## 開発環境イメージをビルド
 	@echo "$(GREEN)開発環境イメージをビルド中...$(RESET)"
-	docker compose build wire-dev
-
-build-prod: ## 本番環境イメージをビルド
-	@echo "$(GREEN)本番環境イメージをビルド中...$(RESET)"
-	docker compose build wire-prod
+	docker compose build
 
 build-no-cache: ## キャッシュなしでビルド
 	@echo "$(GREEN)キャッシュなしでビルド中...$(RESET)"
@@ -248,20 +168,6 @@ quickstart: build dev ## クイックスタート（ビルド＆起動）
 	@echo "$(GREEN)クイックスタート完了！$(RESET)"
 	@echo ""
 	@echo "次のステップ:"
-	@echo "  1. $(CYAN)make shell$(RESET)        - 開発環境に接続"
-	@echo "  2. $(CYAN)make tutorial$(RESET)     - チュートリアル環境を起動"
-	@echo "  3. $(CYAN)make test$(RESET)         - テストを実行"
-	@echo "  4. $(CYAN)make watch-dev$(RESET)    - Watchモードで開発"
+	@echo "  1. $(CYAN)make shell$(RESET)     - 開発環境に接続"
+	@echo "  2. $(CYAN)make test$(RESET)      - テストを実行"
 	@echo ""
-
-demo: ## デモ（チュートリアル実行）
-	@echo "$(GREEN)========================================$(RESET)"
-	@echo "$(GREEN)   Wireチュートリアルデモ$(RESET)"
-	@echo "$(GREEN)========================================$(RESET)"
-	@$(MAKE) tutorial
-	@sleep 2
-	@echo ""
-	@echo "$(CYAN)チュートリアルを実行中...$(RESET)"
-	@$(MAKE) run-tutorial
-	@echo ""
-	@echo "$(GREEN)デモ完了！$(RESET)"

@@ -9,6 +9,8 @@ services:
       dockerfile: dockerfiles/Dockerfile.dev
     container_name: wire-dev
     volumes:
+      # ホストのプロジェクトディレクトリを直接マウント
+      - .:/workspace
       # Goモジュールのキャッシュ（パフォーマンス向上）
       - go-mod-cache:/go/pkg/mod
       - go-build-cache:/root/.cache/go-build
@@ -16,86 +18,6 @@ services:
     stdin_open: true
     tty: true
     command: /bin/bash
-    develop:
-      watch:
-        # Goソースコードの変更を監視して同期
-        - action: sync
-          path: .
-          target: /workspace
-          ignore:
-            - .git/
-            - .github/
-            - dockerfiles/
-            - docs/
-            - internal/wire/testdata/
-        # go.modの変更時はイメージを再ビルド
-        - action: rebuild
-          path: go.mod
-        - action: rebuild
-          path: go.sum
-
-  # 本番環境（Wireツールの実行）
-  wire-prod:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.prod
-      # ビルド時の引数（必要に応じて追加可能）
-      args:
-        - BUILDKIT_INLINE_CACHE=1
-    image: wire:latest
-    container_name: wire-prod
-    volumes:
-      # プロジェクトをマウント（wire生成のため）
-      - .:/app
-    working_dir: /app
-    user: "1000:1000"
-    # セキュリティ設定
-    security_opt:
-      - no-new-privileges:true
-    read_only: true
-    tmpfs:
-      - /tmp
-
-  # チュートリアル実行環境（Watch対応）
-  wire-tutorial:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.dev
-    container_name: wire-tutorial
-    volumes:
-      - go-mod-cache:/go/pkg/mod
-      - go-build-cache:/root/.cache/go-build
-    working_dir: /workspace/_tutorial
-    stdin_open: true
-    tty: true
-    command: /bin/bash
-    develop:
-      watch:
-        # チュートリアルファイルの変更を監視
-        - action: sync+restart
-          path: ./_tutorial
-          target: /workspace/_tutorial
-          ignore:
-            - ./_tutorial/wire_gen.go
-
-  # テスト実行環境
-  wire-test:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.dev
-    container_name: wire-test
-    volumes:
-      - .:/workspace
-      - go-mod-cache:/go/pkg/mod
-      - go-build-cache:/root/.cache/go-build
-    working_dir: /workspace
-    command: go test -mod=readonly -race ./...
-    # 生成されるコードの内容を意図的に変えた場合はゴールデンファイルを更新するのが下記コマンド
-    # command: go test -v ./... -record
-    depends_on:
-      wire-dev:
-        condition: service_started
-        restart: true
 
 volumes:
   go-mod-cache:
