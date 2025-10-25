@@ -1,0 +1,7 @@
+example.com/foo/wire.go:x:y: multiple bindings for *example.com/foo.Foo
+current:
+<- provider "ProvideFoo" (example.com/foo/foo.go:x:y)
+<- provider set "UnusedSet" (example.com/foo/wire.go:x:y)
+previous:
+<- provider "ProvideFoo" (example.com/foo/foo.go:x:y)
+<- provider set "UsedSet" (example.com/foo/wire.go:x:y)

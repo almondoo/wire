@@ -1,0 +1,5 @@
+example.com/foo/foo.go:x:y: expected declaration, found 'import'
+
+example.com/foo/foo.go:x:y: undeclared name: wire
+
+example.com/foo/foo.go:x:y: undeclared name: wire
