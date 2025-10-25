@@ -3,7 +3,7 @@
 例を通じてWireの使い方を学びましょう。[Wireガイド][guide]はツールの使用方法について詳細なドキュメントを提供しています。より大規模なサーバーにWireが適用されているのを見たい読者には、[Go Cloudのゲストブックサンプル][guestbook]がコンポーネントの初期化にWireを使用しています。ここでは、Wireの使い方を理解するために小さなgreeterプログラムを構築します。完成品はこのREADMEと同じディレクトリにあります。
 
 [guestbook]: https://github.com/google/go-cloud/tree/master/samples/guestbook
-[guide]:     https://github.com/google/wire/blob/master/docs/guide.md
+[guide]:     https://github.com/almondoo/wire/blob/master/docs/guide.md
 
 ## Greeterプログラムを構築する最初のパス
 
@@ -131,7 +131,7 @@ Wire用語では、`InitializeEvent`は「インジェクタ」です。イン�
 次のコマンドでツールをインストールします:
 
 ``` shell
-go install github.com/google/wire/cmd/wire@latest
+go install github.com/almondoo/wire/cmd/wire@latest
 ```
 
 次に、上記のコードと同じディレクトリで単に`wire`を実行します。Wireは`InitializeEvent`インジェクタを見つけ、必要なすべての初期化ステップで本体が埋められた関数を生成します。結果は`wire_gen.go`という名前のファイルに書き込まれます。
@@ -287,9 +287,9 @@ func InitializeEvent(phrase string) (Event, error) {
 
 ``` shell
 # 読みやすさのためにエラーを複数行に分割
-$GOPATH/src/github.com/google/wire/_tutorial/wire.go:24:1:
-inject InitializeEvent: no provider found for github.com/google/wire/_tutorial.Greeter
-(required by provider of github.com/google/wire/_tutorial.Event)
+$GOPATH/src/github.com/almondoo/wire/_tutorial/wire.go:24:1:
+inject InitializeEvent: no provider found for github.com/almondoo/wire/_tutorial.Greeter
+(required by provider of github.com/almondoo/wire/_tutorial.Event)
 wire: generate failed
 ```
 
@@ -312,7 +312,7 @@ func InitializeEvent(phrase string) (Event, error) {
 Wireは、使用されていないプロバイダがあることを親切に教えてくれます:
 
 ``` shell
-$GOPATH/src/github.com/google/wire/_tutorial/wire.go:24:1:
+$GOPATH/src/github.com/almondoo/wire/_tutorial/wire.go:24:1:
 inject InitializeEvent: unused provider "NewEventNumber"
 wire: generate failed
 ```
@@ -327,8 +327,8 @@ wire: generate failed
 
 最後に、Wireはここで説明されていない多数の追加機能をサポートしていることを述べる価値があります。プロバイダは[プロバイダセット][sets]にグループ化できます。[インターフェースのバインディング][interfaces]、[値のバインディング][values]、および[クリーンアップ関数][cleanup]のサポートがあります。詳細については、[高度な機能][advanced]セクションを参照してください。
 
-[advanced]:   https://github.com/google/wire/blob/master/docs/guide.md#advanced-features
-[cleanup]:    https://github.com/google/wire/blob/master/docs/guide.md#cleanup-functions
-[interfaces]: https://github.com/google/wire/blob/master/docs/guide.md#binding-interfaces
-[sets]:       https://github.com/google/wire/blob/master/docs/guide.md#defining-providers
-[values]:     https://github.com/google/wire/blob/master/docs/guide.md#binding-values
+[advanced]:   https://github.com/almondoo/wire/blob/master/docs/guide.md#advanced-features
+[cleanup]:    https://github.com/almondoo/wire/blob/master/docs/guide.md#cleanup-functions
+[interfaces]: https://github.com/almondoo/wire/blob/master/docs/guide.md#binding-interfaces
+[sets]:       https://github.com/almondoo/wire/blob/master/docs/guide.md#defining-providers
+[values]:     https://github.com/almondoo/wire/blob/master/docs/guide.md#binding-values
