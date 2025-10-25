@@ -160,14 +160,3 @@ vet: ## コードを静的解析
 	docker compose exec wire-dev go vet ./...
 
 lint: fmt vet ## コードをフォーマット＆静的解析
-
-##@ クイックスタート
-
-quickstart: build dev ## クイックスタート（ビルド＆起動）
-	@echo ""
-	@echo "$(GREEN)クイックスタート完了！$(RESET)"
-	@echo ""
-	@echo "次のステップ:"
-	@echo "  1. $(CYAN)make shell$(RESET)     - 開発環境に接続"
-	@echo "  2. $(CYAN)make test$(RESET)      - テストを実行"
-	@echo ""
