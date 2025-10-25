@@ -1,7 +1,7 @@
 # Wire: Automated Initialization in Go
 
-[![Build Status](https://github.com/google/wire/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/google/wire/actions)
-[![godoc](https://godoc.org/github.com/google/wire?status.svg)][godoc]
+[![Build Status](https://github.com/almondoo/wire/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/almondoo/wire/actions)
+[![godoc](https://godoc.org/github.com/almondoo/wire?status.svg)][godoc]
 
 > [!NOTE]
 > This is a maintained fork of [google/wire](https://github.com/google/wire).
@@ -18,8 +18,7 @@ For an overview, see the [introductory blog post][].
 
 [dependency injection]: https://en.wikipedia.org/wiki/Dependency_injection
 [introductory blog post]: https://blog.golang.org/wire
-[godoc]: https://godoc.org/github.com/google/wire
-[travis]: https://travis-ci.com/google/wire
+[godoc]: https://godoc.org/github.com/almondoo/wire
 
 ## Installing
 
@@ -54,7 +53,7 @@ reports and fixes.
 
 ## Community
 
-For questions, please use [GitHub Discussions](https://github.com/google/wire/discussions).
+For questions, please use [GitHub Discussions](https://github.com/almondoo/wire/discussions).
 
 This project is covered by the Go [Code of Conduct][].
 

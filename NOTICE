@@ -1,0 +1,23 @@
+Wire: Automated Initialization in Go
+Copyright 2018 The Wire Authors
+Copyright 2025 almondoo
+
+This project is a maintained fork of google/wire (https://github.com/google/wire).
+
+This product contains software originally developed by Google LLC and The Wire Authors,
+licensed under the Apache License 2.0.
+
+The original google/wire project contributors include:
+- Ross Light
+- Robert van Gent
+- Chris Lewis
+- Eli Bendersky
+- Robert Findley
+- Russ Cox
+- And many other contributors listed in the git history
+
+This fork continues to maintain and improve upon the original work while preserving
+the Apache License 2.0 terms and acknowledging all original contributors.
+
+For the full list of contributors, see the git commit history:
+https://github.com/almondoo/wire/graphs/contributors
