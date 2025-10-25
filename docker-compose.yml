@@ -2,7 +2,6 @@
 # Docker Compose v2.x 以降対応
 
 services:
-  # 開発環境（Docker Compose Watch対応）
   wire-dev:
     build:
       context: .
