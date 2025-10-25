@@ -37,11 +37,11 @@ test: ## テストを実行
 
 test-verbose: ## 詳細モードでテストを実行
 	@echo "$(GREEN)テスト（詳細モード）を実行中...$(RESET)"
-	docker compose exec wire-dev go test -v ./...
+	docker compose exec wire-dev go test -v -mod=readonly -race ./...
 
 test-cover: ## カバレッジ付きでテストを実行
 	@echo "$(GREEN)カバレッジ付きテストを実行中...$(RESET)"
-	docker compose exec wire-dev go test -cover ./...
+	docker compose exec wire-dev go test -cover -mod=readonly -race ./...
 
 test-bench: ## ベンチマークを実行
 	@echo "$(GREEN)ベンチマークを実行中...$(RESET)"
