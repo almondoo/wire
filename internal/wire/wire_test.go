@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"go/build"
 	"go/types"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -52,28 +51,29 @@ func getGoVersion() string {
 }
 
 // getVersionedErrorFile returns the path to the version-specific wire_errs.txt file.
-// It first tries to find a file specific to the current Go version (e.g., wire_errs_go1.22.txt),
-// and falls back to the generic wire_errs.txt if not found.
-func getVersionedErrorFile(root string) string {
+// It requires a file specific to the current Go version (e.g., wire_errs_go1.22.txt).
+// Returns an error if the version-specific file is not found.
+func getVersionedErrorFile(root string) (string, error) {
 	goVersion := getGoVersion()
-	if goVersion != "" {
-		versionedPath := filepath.Join(root, "want", "wire_errs_go"+goVersion+".txt")
-		if _, err := os.Stat(versionedPath); err == nil {
-			return versionedPath
-		}
+	if goVersion == "" {
+		return "", fmt.Errorf("could not determine Go version")
 	}
-	return filepath.Join(root, "want", "wire_errs.txt")
+	versionedPath := filepath.Join(root, "want", "wire_errs_go"+goVersion+".txt")
+	if _, err := os.Stat(versionedPath); err != nil {
+		return "", fmt.Errorf("version-specific error file not found: %s (Go version: %s)", versionedPath, goVersion)
+	}
+	return versionedPath, nil
 }
 
 func TestWire(t *testing.T) {
 	const testRoot = "testdata"
-	testdataEnts, err := ioutil.ReadDir(testRoot) // ReadDir sorts by name.
+	testdataEnts, err := os.ReadDir(testRoot) // ReadDir sorts by name.
 	if err != nil {
 		t.Fatal(err)
 	}
 	// The marker function package source is needed to have the test cases
 	// type check. loadTestCase places this file at the well-known import path.
-	wireGo, err := ioutil.ReadFile(filepath.Join("..", "..", "wire.go"))
+	wireGo, err := os.ReadFile(filepath.Join("..", "..", "wire.go"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -105,7 +105,7 @@ func TestWire(t *testing.T) {
 			t.Parallel()
 
 			// Materialize a temporary GOPATH directory.
-			gopath, err := ioutil.TempDir("", "wire_test")
+			gopath, err := os.MkdirTemp("", "wire_test")
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -139,19 +139,17 @@ func TestWire(t *testing.T) {
 					gotErrStrings[i] = scrubError(gopath, e.Error())
 				}
 				if !test.wantWireError {
-					t.Fatal("Did not expect errors. To -record an error, create want/wire_errs.txt.")
+					t.Fatal("Did not expect errors. To -record an error, run tests with -record flag.")
 				}
 				if *record {
 					// Write version-specific error file
 					goVersion := getGoVersion()
-					var wireErrsFile string
-					if goVersion != "" {
-						wireErrsFile = filepath.Join(testRoot, test.name, "want", "wire_errs_go"+goVersion+".txt")
-					} else {
-						wireErrsFile = filepath.Join(testRoot, test.name, "want", "wire_errs.txt")
+					if goVersion == "" {
+						t.Fatal("could not determine Go version for generating error file")
 					}
-					if err := ioutil.WriteFile(wireErrsFile, []byte(strings.Join(gotErrStrings, "\n\n")), 0666); err != nil {
-						t.Fatalf("failed to write wire_errs.txt file: %v", err)
+					wireErrsFile := filepath.Join(testRoot, test.name, "want", "wire_errs_go"+goVersion+".txt")
+					if err := os.WriteFile(wireErrsFile, []byte(strings.Join(gotErrStrings, "\n\n")), 0666); err != nil {
+						t.Fatalf("failed to write version-specific wire_errs file: %v", err)
 					}
 				} else {
 					if diff := cmp.Diff(gotErrStrings, test.wantWireErrorStrings); diff != "" {
@@ -184,7 +182,7 @@ func TestWire(t *testing.T) {
 					t.Fatalf("go build check failed: %v", err)
 				}
 				testdataWireGenPath := filepath.Join(testRoot, test.name, "want", "wire_gen.go")
-				if err := ioutil.WriteFile(testdataWireGenPath, gen.Content, 0666); err != nil {
+				if err := os.WriteFile(testdataWireGenPath, gen.Content, 0666); err != nil {
 					t.Fatalf("failed to record wire_gen.go to testdata: %v", err)
 				}
 			} else {
@@ -486,33 +484,38 @@ type testCase struct {
 //
 //		want/
 //
-//			wire_errs.txt
-//					Expected errors from the Wire Generate function,
+//			wire_errs_go1.XX.txt
+//					Expected errors from the Wire Generate function for Go version 1.XX,
 //					missing if no errors expected.
 //					Distinct errors are separated by a blank line,
 //					and line numbers and line positions are scrubbed
 //					(e.g. "$GOPATH/src/foo.go:52:8" --> "foo.go:x:y").
+//					Version-specific error files are required (e.g., wire_errs_go1.22.txt).
 //
 //			wire_gen.go
 //					verified output of wire from a test run with
-//					-record, missing if wire_errs.txt is present
+//					-record, missing if wire_errs_go1.XX.txt is present
 //
 //			program_out.txt
 //					expected output from the final compiled program,
-//					missing if wire_errs.txt is present
+//					missing if wire_errs_go1.XX.txt is present
 func loadTestCase(root string, wireGoSrc []byte) (*testCase, error) {
 	name := filepath.Base(root)
-	pkg, err := ioutil.ReadFile(filepath.Join(root, "pkg"))
+	pkg, err := os.ReadFile(filepath.Join(root, "pkg"))
 	if err != nil {
 		return nil, fmt.Errorf("load test case %s: %v", name, err)
 	}
-	header, _ := ioutil.ReadFile(filepath.Join(root, "header"))
+	header, _ := os.ReadFile(filepath.Join(root, "header"))
 	var wantProgramOutput []byte
 	var wantWireOutput []byte
-	// Try to load version-specific error file first, then fall back to generic
-	wireErrsPath := getVersionedErrorFile(root)
-	wireErrb, err := ioutil.ReadFile(wireErrsPath)
-	wantWireError := err == nil
+	// Try to load version-specific error file
+	wireErrsPath, err := getVersionedErrorFile(root)
+	var wireErrb []byte
+	var wantWireError bool
+	if err == nil {
+		wireErrb, err = os.ReadFile(wireErrsPath)
+		wantWireError = err == nil
+	}
 	var wantWireErrorStrings []string
 	if wantWireError {
 		for _, errs := range strings.Split(string(wireErrb), "\n\n") {
@@ -521,12 +524,12 @@ func loadTestCase(root string, wireGoSrc []byte) (*testCase, error) {
 		}
 	} else {
 		if !*record {
-			wantWireOutput, err = ioutil.ReadFile(filepath.Join(root, "want", "wire_gen.go"))
+			wantWireOutput, err = os.ReadFile(filepath.Join(root, "want", "wire_gen.go"))
 			if err != nil {
 				return nil, fmt.Errorf("load test case %s: %v, if this is a new testcase, run with -record to generate the wire_gen.go file", name, err)
 			}
 		}
-		wantProgramOutput, err = ioutil.ReadFile(filepath.Join(root, "want", "program_out.txt"))
+		wantProgramOutput, err = os.ReadFile(filepath.Join(root, "want", "program_out.txt"))
 		if err != nil {
 			return nil, fmt.Errorf("load test case %s: %v", name, err)
 		}
@@ -549,7 +552,7 @@ func loadTestCase(root string, wireGoSrc []byte) (*testCase, error) {
 		if !info.Mode().IsRegular() || filepath.Ext(src) != ".go" {
 			return nil
 		}
-		data, err := ioutil.ReadFile(src)
+		data, err := os.ReadFile(src)
 		if err != nil {
 			return err
 		}
@@ -579,7 +582,7 @@ func (test *testCase) materialize(gopath string) error {
 		if err := os.MkdirAll(filepath.Dir(dst), 0777); err != nil {
 			return fmt.Errorf("materialize GOPATH: %v", err)
 		}
-		if err := ioutil.WriteFile(dst, content, 0666); err != nil {
+		if err := os.WriteFile(dst, content, 0666); err != nil {
 			return fmt.Errorf("materialize GOPATH: %v", err)
 		}
 	}
@@ -590,10 +593,10 @@ func (test *testCase) materialize(gopath string) error {
 	depLoc := filepath.Join(gopath, "src", filepath.FromSlash(depPath))
 	example := fmt.Sprintf("module %s\n\nrequire %s v0.1.0\nreplace %s => %s\n", importPath, depPath, depPath, depLoc)
 	gomod := filepath.Join(gopath, "src", filepath.FromSlash(importPath), "go.mod")
-	if err := ioutil.WriteFile(gomod, []byte(example), 0666); err != nil {
+	if err := os.WriteFile(gomod, []byte(example), 0666); err != nil {
 		return fmt.Errorf("generate go.mod for %s: %v", gomod, err)
 	}
-	if err := ioutil.WriteFile(filepath.Join(depLoc, "go.mod"), []byte("module "+depPath+"\n"), 0666); err != nil {
+	if err := os.WriteFile(filepath.Join(depLoc, "go.mod"), []byte("module "+depPath+"\n"), 0666); err != nil {
 		return fmt.Errorf("generate go.mod for %s: %v", depPath, err)
 	}
 	return nil
