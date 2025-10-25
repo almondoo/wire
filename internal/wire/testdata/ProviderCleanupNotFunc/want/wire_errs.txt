@@ -1,1 +1,0 @@
-example.com/foo/foo.go:x:y: wrong signature for provider ProvideFoo: second return type is string; must be func()

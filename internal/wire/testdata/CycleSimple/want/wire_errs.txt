@@ -1,4 +1,0 @@
-example.com/foo/wire.go:x:y: cycle for *example.com/foo.A:
-*example.com/foo.A (example.com/foo.ProvideA) ->
-*example.com/foo.B (example.com/foo.ProvideB) ->
-*example.com/foo.A

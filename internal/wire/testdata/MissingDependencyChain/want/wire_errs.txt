@@ -1,3 +1,0 @@
-example.com/foo/wire.go:x:y: inject inject: no provider found for *example.com/foo.C
-needed by *example.com/foo.B in provider "ProvideB" (example.com/foo/foo.go:x:y)
-needed by *example.com/foo.A in provider "ProvideA" (example.com/foo/foo.go:x:y)

@@ -1,1 +1,0 @@
-example.com/foo/wire.go:x:y: fields number exceeds the number available in the struct which has 2 fields
