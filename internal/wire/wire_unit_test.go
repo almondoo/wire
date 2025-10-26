@@ -1373,8 +1373,8 @@ func provideFoo() int {
 		cfg := &packages.Config{
 			Mode: packages.NeedName | packages.NeedFiles | packages.NeedSyntax |
 				packages.NeedTypes | packages.NeedTypesInfo | packages.NeedModule,
-			Dir: tempDir,
-			Env: append(os.Environ(), "GOPACKAGESDRIVER=off"),
+			Dir:     tempDir,
+			Env:     append(os.Environ(), "GOPACKAGESDRIVER=off"),
 			Context: context.Background(),
 		}
 
@@ -1740,9 +1740,9 @@ func foo() {
 	g.pkg.Fset = fset
 
 	info := &types.Info{
-		Types: make(map[ast.Expr]types.TypeAndValue),
-		Uses:  make(map[*ast.Ident]types.Object),
-		Defs:  make(map[*ast.Ident]types.Object),
+		Types:      make(map[ast.Expr]types.TypeAndValue),
+		Uses:       make(map[*ast.Ident]types.Object),
+		Defs:       make(map[*ast.Ident]types.Object),
 		Selections: make(map[*ast.SelectorExpr]*types.Selection),
 	}
 
