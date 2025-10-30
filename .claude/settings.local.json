@@ -1,6 +1,6 @@
 {
   "permissions": {
-    "allow": ["Bash(make:*)"],
+    "allow": ["Bash(make:*)", "Bash(docker compose:*)"],
     "deny": [],
     "ask": []
   }
