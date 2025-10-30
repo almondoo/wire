@@ -131,7 +131,8 @@ func detectOutputDir(paths []string) (string, error) {
 			return "", fmt.Errorf("found conflicting directories %q and %q", dir, dir2)
 		}
 	}
-	return dir, nil
+	// Normalize path separators to forward slashes for cross-platform consistency
+	return strings.ReplaceAll(dir, "\\", "/"), nil
 }
 
 // generateInjectors generates the injectors for a given package.
