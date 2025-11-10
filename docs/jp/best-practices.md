@@ -77,7 +77,7 @@ func NewGreeter(ctx context.Context, w io.Writer, msgs []Message) (*Greeter, err
 
 ## モック
 
-モックされた依存関係を持つ注入されたアプリを作成するには、2つのアプローチがあります。両方のアプローチの例は[こちら](https://github.com/google/wire/tree/master/internal/wire/testdata/ExampleWithMocks/foo)で示されています。
+モックされた依存関係を持つ注入されたアプリを作成するには、2つのアプローチがあります。両方のアプローチの例は[こちら](https://github.com/almondoo/wire/tree/main/internal/wire/testdata/ExampleWithMocks/foo)で示されています。
 
 ### アプローチA: モックをインジェクタに渡す
 
