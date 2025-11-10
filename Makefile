@@ -94,6 +94,11 @@ build-no-cache: ## キャッシュなしでビルド
 	@echo "$(GREEN)キャッシュなしでビルド中...$(RESET)"
 	docker compose build --no-cache
 
+build-wire: ## wire.goをビルド
+	@echo "$(GREEN)wire.goをビルド中...$(RESET)"
+	docker compose exec wire-dev go build -o bin/wire ./wire.go
+	@echo "$(GREEN)ビルド完了: bin/wire$(RESET)"
+
 ##@ クリーンアップ
 
 clean: ## コンテナを停止・削除
