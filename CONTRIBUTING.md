@@ -12,7 +12,7 @@ that isn't working for you.
 ### Bugs
 
 If your issue is a bug, open one
-[here](https://github.com/google/wire/issues/new). The easiest way to file an
+[here](https://github.com/almondoo/wire/issues/new). The easiest way to file an
 issue with all the right information is to run `go bug`. `go bug` will print out
 a handy template of questions and system information that will help us get to
 the root of the issue quicker.
@@ -31,7 +31,7 @@ milestone which means the issue is intended to be worked on. Issues that we
 would like to address but do not have time for are placed into the [Unplanned][]
 milestone.
 
-[Unplanned]: https://github.com/google/wire/milestone/1
+[Unplanned]: https://github.com/almondoo/wire/milestone/1
 
 ## Contributing Code
 
@@ -52,17 +52,9 @@ work, you can comment on the issue and we will try to help as best we can.
 
 ### Contributor License Agreement
 
-Contributions to this project can only be made by those who have signed Google's
-Contributor License Agreement. You (or your employer) retain the copyright to
-your contribution, this simply gives us permission to use and redistribute your
-contributions as part of the project. Head over to
-<https://cla.developers.google.com/> to see your current agreements on file or
-to sign a new one.
-
-As a personal contributor, you only need to sign the Google CLA once across all
-Google projects. If you've already signed the CLA, there is no need to do it
-again. If you are submitting code on behalf of your employer, there's
-[a separate corporate CLA that your employer manages for you](https://opensource.google.com/docs/cla/#external-contributors).
+By contributing to this project, you agree that your contributions will be licensed
+under the same Apache License 2.0 that covers this project. You (or your employer)
+retain the copyright to your contribution.
 
 ## Making a pull request
 
