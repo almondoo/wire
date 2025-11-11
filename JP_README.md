@@ -1,7 +1,7 @@
 # Wire: Goにおける自動初期化
 
-[![Build Status](https://github.com/google/wire/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/google/wire/actions)
-[![godoc](https://godoc.org/github.com/google/wire?status.svg)][godoc]
+[![Build Status](https://github.com/almondoo/wire/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/almondoo/wire/actions)
+[![godoc](https://godoc.org/github.com/almondoo/wire?status.svg)][godoc]
 
 > [!NOTE]
 > これは[google/wire](https://github.com/google/wire)のメンテナンスフォークです。
@@ -13,8 +13,7 @@ Wireは、[依存性注入][]を使用してコンポーネントを接続する
 
 [依存性注入]: https://en.wikipedia.org/wiki/Dependency_injection
 [紹介ブログ記事]: https://blog.golang.org/wire
-[godoc]: https://godoc.org/github.com/google/wire
-[travis]: https://travis-ci.com/google/wire
+[godoc]: https://godoc.org/github.com/almondoo/wire
 
 ## インストール
 
@@ -46,7 +45,7 @@ go install github.com/almondoo/wire/cmd/wire@latest
 
 ## コミュニティ
 
-ご質問については、[GitHub Discussions](https://github.com/google/wire/discussions)をご利用ください。
+ご質問については、[GitHub Discussions](https://github.com/almondoo/wire/discussions)をご利用ください。
 
 このプロジェクトはGoの[行動規範][]の対象です。
 
