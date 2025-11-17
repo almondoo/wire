@@ -228,6 +228,133 @@ interface type and the second argument is a pointer to a value of the type that
 implements the interface. Any set that includes an interface binding must also
 have a provider in the same set that provides the concrete type.
 
+#### Understanding wire.Bind
+
+`wire.Bind` tells Wire: "whenever a dependency needs interface type X, use concrete type Y to satisfy it."
+
+The syntax is:
+```go
+wire.Bind(new(InterfaceType), new(ConcreteType))
+```
+
+**Important notes:**
+- Both arguments must be pointers created with `new()`
+- The concrete type must actually implement the interface
+- A provider for the concrete type must exist in the same provider set
+- The concrete type is what the provider returns; Wire automatically performs the interface conversion
+
+#### Multiple Bindings
+
+You can bind different concrete types to different interfaces in the same provider set:
+
+```go
+type Reader interface {
+    Read() string
+}
+
+type Writer interface {
+    Write(string)
+}
+
+type FileHandler struct {
+    path string
+}
+
+func (f *FileHandler) Read() string { return "reading from " + f.path }
+func (f *FileHandler) Write(s string) { /* write logic */ }
+
+func provideFileHandler() *FileHandler {
+    return &FileHandler{path: "/tmp/file.txt"}
+}
+
+var Set = wire.NewSet(
+    provideFileHandler,
+    wire.Bind(new(Reader), new(*FileHandler)),
+    wire.Bind(new(Writer), new(*FileHandler)),
+)
+```
+
+In this case, `*FileHandler` satisfies both `Reader` and `Writer` interfaces.
+
+#### Using wire.Bind with Mocks for Testing
+
+`wire.Bind` is particularly useful for creating testable code by swapping implementations:
+
+```go
+type Database interface {
+    Query(string) []Row
+}
+
+type PostgresDB struct { /* ... */ }
+func (p *PostgresDB) Query(q string) []Row { /* real implementation */ }
+
+type MockDB struct {
+    Results []Row
+}
+func (m *MockDB) Query(q string) []Row { return m.Results }
+
+// Production provider set
+var ProdSet = wire.NewSet(
+    NewPostgresDB,
+    wire.Bind(new(Database), new(*PostgresDB)),
+)
+
+// Test provider set
+var TestSet = wire.NewSet(
+    NewMockDB,
+    wire.Bind(new(Database), new(*MockDB)),
+)
+```
+
+This allows you to use different injectors for production and testing without changing your application code.
+
+#### Common Errors
+
+**Error: "no provider found for X"**
+
+This happens when you have a binding but no provider for the concrete type:
+
+```go
+// Wrong: missing provider for *MyFooer
+var Set = wire.NewSet(
+    wire.Bind(new(Fooer), new(*MyFooer)),
+)
+
+// Correct: include the provider
+var Set = wire.NewSet(
+    provideMyFooer,
+    wire.Bind(new(Fooer), new(*MyFooer)),
+)
+```
+
+**Error: "MyFooer does not implement Fooer"**
+
+The concrete type must actually implement the interface:
+
+```go
+type Fooer interface {
+    Foo() string
+}
+
+type MyFooer struct{}
+// Missing Foo() method!
+
+// This will fail:
+wire.Bind(new(Fooer), new(*MyFooer))
+```
+
+**Error: "wire.Bind argument must be a pointer"**
+
+Both arguments to `wire.Bind` must use `new()`:
+
+```go
+// Wrong:
+wire.Bind(Fooer, MyFooer)
+
+// Correct:
+wire.Bind(new(Fooer), new(*MyFooer))
+```
+
 [type identity]: https://golang.org/ref/spec#Type_identity
 [return concrete types]: https://github.com/golang/go/wiki/CodeReviewComments#interfaces
 
