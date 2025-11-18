@@ -201,6 +201,133 @@ var Set = wire.NewSet(
 
 `wire.Bind`の最初の引数は、望ましいインターフェース型の値へのポインタで、2番目の引数は、インターフェースを実装する型の値へのポインタです。インターフェースバインディングを含むセットには、同じセット内に具象型を提供するプロバイダも必要です。
 
+#### wire.Bindの理解
+
+`wire.Bind`はWireに対して「依存関係がインターフェース型Xを必要とする場合は、具象型Yを使用して満たす」と伝えます。
+
+構文は次のとおりです:
+```go
+wire.Bind(new(InterfaceType), new(ConcreteType))
+```
+
+**重要な注意事項:**
+- 両方の引数は`new()`で作成されたポインタでなければなりません
+- 具象型は実際にインターフェースを実装している必要があります
+- 具象型のプロバイダが同じプロバイダセット内に存在する必要があります
+- 具象型はプロバイダが返すもので、Wireが自動的にインターフェース変換を実行します
+
+#### 複数のバインディング
+
+同じプロバイダセット内で、異なる具象型を異なるインターフェースにバインドできます:
+
+```go
+type Reader interface {
+    Read() string
+}
+
+type Writer interface {
+    Write(string)
+}
+
+type FileHandler struct {
+    path string
+}
+
+func (f *FileHandler) Read() string { return "reading from " + f.path }
+func (f *FileHandler) Write(s string) { /* write logic */ }
+
+func provideFileHandler() *FileHandler {
+    return &FileHandler{path: "/tmp/file.txt"}
+}
+
+var Set = wire.NewSet(
+    provideFileHandler,
+    wire.Bind(new(Reader), new(*FileHandler)),
+    wire.Bind(new(Writer), new(*FileHandler)),
+)
+```
+
+この場合、`*FileHandler`は`Reader`と`Writer`の両方のインターフェースを満たします。
+
+#### テストでのwire.Bindとモックの使用
+
+`wire.Bind`は、実装を入れ替えることでテスト可能なコードを作成するのに特に便利です:
+
+```go
+type Database interface {
+    Query(string) []Row
+}
+
+type PostgresDB struct { /* ... */ }
+func (p *PostgresDB) Query(q string) []Row { /* 実際の実装 */ }
+
+type MockDB struct {
+    Results []Row
+}
+func (m *MockDB) Query(q string) []Row { return m.Results }
+
+// 本番用プロバイダセット
+var ProdSet = wire.NewSet(
+    NewPostgresDB,
+    wire.Bind(new(Database), new(*PostgresDB)),
+)
+
+// テスト用プロバイダセット
+var TestSet = wire.NewSet(
+    NewMockDB,
+    wire.Bind(new(Database), new(*MockDB)),
+)
+```
+
+これにより、アプリケーションコードを変更することなく、本番環境とテストで異なるインジェクタを使用できます。
+
+#### よくあるエラー
+
+**エラー: "no provider found for X"**
+
+これは、バインディングはあるが具象型のプロバイダがない場合に発生します:
+
+```go
+// 間違い: *MyFooerのプロバイダがない
+var Set = wire.NewSet(
+    wire.Bind(new(Fooer), new(*MyFooer)),
+)
+
+// 正しい: プロバイダを含める
+var Set = wire.NewSet(
+    provideMyFooer,
+    wire.Bind(new(Fooer), new(*MyFooer)),
+)
+```
+
+**エラー: "MyFooer does not implement Fooer"**
+
+具象型は実際にインターフェースを実装している必要があります:
+
+```go
+type Fooer interface {
+    Foo() string
+}
+
+type MyFooer struct{}
+// Foo()メソッドがない!
+
+// これは失敗します:
+wire.Bind(new(Fooer), new(*MyFooer))
+```
+
+**エラー: "wire.Bind argument must be a pointer"**
+
+`wire.Bind`の両方の引数は`new()`を使用する必要があります:
+
+```go
+// 間違い:
+wire.Bind(Fooer, MyFooer)
+
+// 正しい:
+wire.Bind(new(Fooer), new(*MyFooer))
+```
+
 [型の同一性]: https://golang.org/ref/spec#Type_identity
 [具象型を返す]: https://github.com/golang/go/wiki/CodeReviewComments#interfaces
 
