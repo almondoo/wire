@@ -1,7 +1,13 @@
 {
   "permissions": {
-    "allow": ["Bash(make:*)"],
+    "allow": [
+      "Bash(make:*)"
+    ],
     "deny": [],
     "ask": []
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
   }
 }
