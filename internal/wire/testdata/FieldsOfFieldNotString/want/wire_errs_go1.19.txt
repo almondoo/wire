@@ -1,1 +1,0 @@
-example.com/foo/wire.go:x:y: fieldName must be a string with the field name

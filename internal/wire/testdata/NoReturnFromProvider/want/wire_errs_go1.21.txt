@@ -1,1 +1,0 @@
-example.com/foo/foo.go:x:y: wrong signature for provider ProvideNothing: no return values

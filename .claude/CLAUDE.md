@@ -10,26 +10,24 @@ Wire は AST 解析によりプロバイダ関数を分析し（ランタイム�
 
 ## よく使うコマンド
 
+**重要: テストやビルドコマンドは必ず Docker コンテナ内で実行すること。** ローカル環境ではなく `docker compose exec wire-dev` 経由で実行する。
+
 ```bash
-# 全テスト実行（CI と同等）
-go test -mod=readonly -race ./...
-
-# 単一テストケースの実行（testdata ベース）
-go test -v -run TestWire/テストケース名 ./internal/wire
-
-# コードフォーマット（CI で強制 — -s で簡略化）
-gofmt -s -w .
-
-# 依存関係の一致確認（CI が Linux で強制）
-./internal/listdeps.sh | diff ./internal/alldeps -
-
-# import 変更後の依存関係リスト更新
-./internal/listdeps.sh > ./internal/alldeps
-
-# Docker ベースの開発
+# Docker ベースの開発（推奨）
 make test          # コンテナ内でテスト実行
 make lint          # gofmt + go vet
 make shell         # 開発コンテナに入る
+
+# コンテナ内で直接実行する場合
+docker compose exec wire-dev go test -mod=readonly -race ./...
+docker compose exec wire-dev go test -v -run TestXxx ./internal/wire
+docker compose exec wire-dev gofmt -s -w .
+
+# 依存関係の一致確認（CI が Linux で強制）
+docker compose exec wire-dev sh -c './internal/listdeps.sh | diff ./internal/alldeps -'
+
+# import 変更後の依存関係リスト更新
+docker compose exec wire-dev sh -c './internal/listdeps.sh > ./internal/alldeps'
 ```
 
 ## アーキテクチャ
@@ -54,12 +52,13 @@ make shell         # 開発コンテナに入る
 
 ### テスト構造
 
-テストは `internal/wire/wire_test.go` にあり、`internal/wire/testdata/` 配下のゴールデンファイルを使用。各テストケースディレクトリの構成:
-- `*.go` ファイル — 入力ソース
-- `want/wire_gen.go` — 期待される生成出力
-- `want/wire_errs_goX.YY.txt` — 期待されるエラーメッセージ（Go バージョンごとにエラー出力が異なるためバージョン固有）
-
-`TestWire` 関数が全 testdata ディレクトリを走査する。テストケースを追加するには、`testdata/` 配下に入力ファイルと期待出力を含む新しいディレクトリを作成する。
+ユニットテストがパイプラインの各段階をカバー:
+- **`parse_test.go`** — AST 解析、プロバイダセット抽出のテスト
+- **`analyze_test.go`** — 依存関係解決、循環検出のテスト
+- **`errors_test.go`** — エラーメッセージのテスト
+- **`generate_test.go`** — コード生成ヘルパー（unexport, disambiguate, zeroValue 等）のテスト
+- **`copyast_test.go`** — AST コピーのテスト
+- **`benchmark_test.go`** — パフォーマンスベンチマーク
 
 ## プロジェクト固有の規約
 

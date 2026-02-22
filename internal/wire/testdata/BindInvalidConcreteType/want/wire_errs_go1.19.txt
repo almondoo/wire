@@ -1,1 +1,0 @@
-example.com/foo/wire.go:x:y: second argument to Bind must be a pointer or a pointer to a pointer; found example.com/foo.MyFoo

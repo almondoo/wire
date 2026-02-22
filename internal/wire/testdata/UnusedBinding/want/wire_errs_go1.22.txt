@@ -1,3 +1,0 @@
-example.com/foo/wire.go:x:y: inject inject: unused provider "main.ProvideBar"
-
-example.com/foo/wire.go:x:y: inject inject: unused interface binding to type example.com/foo.Barer

@@ -1,1 +1,0 @@
-example.com/foo/wire.go:x:y: inject inject: second return type is *example.com/foo.Bar; must be error or func()

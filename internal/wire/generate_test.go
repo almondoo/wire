@@ -21,6 +21,7 @@ import (
 	"go/types"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -306,6 +307,80 @@ func TestAccessibleFrom(t *testing.T) {
 			t.Error("expected error for unexported identifier from different package")
 		}
 	})
+}
+
+// scrubError rewrites the given string to remove occurrences of GOPATH/src,
+// rewrites OS-specific path separators to slashes, and any line/column
+// information to a fixed ":x:y". For example, if the gopath parameter is
+// "C:\GOPATH" and running on Windows, the string
+// "C:\GOPATH\src\foo\bar.go:15:4" would be rewritten to "foo/bar.go:x:y".
+func scrubError(gopath string, s string) string {
+	sb := new(strings.Builder)
+	query := gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator)
+	for {
+		// Find next occurrence of source root. This indicates the next path to
+		// scrub.
+		start := strings.Index(s, query)
+		if start == -1 {
+			sb.WriteString(s)
+			break
+		}
+
+		// Find end of file name (extension ".go").
+		fileStart := start + len(query)
+		fileEnd := strings.Index(s[fileStart:], ".go")
+		if fileEnd == -1 {
+			// If no ".go" occurs to end of string, further searches will fail too.
+			// Break the loop.
+			sb.WriteString(s)
+			break
+		}
+		fileEnd += fileStart + 3 // Advance to end of extension.
+
+		// Write out file name and advance scrub position.
+		file := s[fileStart:fileEnd]
+		if os.PathSeparator != '/' {
+			file = strings.Replace(file, string(os.PathSeparator), "/", -1)
+		}
+		sb.WriteString(s[:start])
+		sb.WriteString(file)
+		s = s[fileEnd:]
+
+		// Peek past to see if there is line/column info.
+		linecol, linecolLen := scrubLineColumn(s)
+		sb.WriteString(linecol)
+		s = s[linecolLen:]
+	}
+	return sb.String()
+}
+
+func scrubLineColumn(s string) (replacement string, n int) {
+	if !strings.HasPrefix(s, ":") {
+		return "", 0
+	}
+	// Skip first colon and run of digits.
+	for n++; len(s) > n && '0' <= s[n] && s[n] <= '9'; {
+		n++
+	}
+	if n == 1 {
+		// No digits followed colon.
+		return "", 0
+	}
+
+	// Start on column part.
+	if !strings.HasPrefix(s[n:], ":") {
+		return ":x", n
+	}
+	lineEnd := n
+	// Skip second colon and run of digits.
+	for n++; len(s) > n && '0' <= s[n] && s[n] <= '9'; {
+		n++
+	}
+	if n == lineEnd+1 {
+		// No digits followed second colon.
+		return ":x", lineEnd
+	}
+	return ":x:y", n
 }
 
 func TestScrubError(t *testing.T) {

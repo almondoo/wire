@@ -1,1 +1,0 @@
-example.com/foo/wire.go:x:y: "NonExistent" is not a field of struct{Host string; Port int}
