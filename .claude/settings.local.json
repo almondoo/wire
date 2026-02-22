@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(make:*)"
+      "Bash(make:*)",
+      "Bash(go build:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker run:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker rm:*)",
+      "Bash(git log:*)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": []
