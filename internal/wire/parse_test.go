@@ -112,11 +112,11 @@ func TestProcessFuncProvider(t *testing.T) {
 	boolT := types.Typ[types.Bool]
 
 	tests := []struct {
-		name      string
-		fn        *types.Func
-		wantArgs  int
-		wantOut   types.Type
-		wantErr   string
+		name     string
+		fn       *types.Func
+		wantArgs int
+		wantOut  types.Type
+		wantErr  string
 	}{
 		{
 			name:    "no params, single return",
@@ -366,7 +366,7 @@ func TestQualifiedIdentObject(t *testing.T) {
 		selIdent := &ast.Ident{Name: "Foo"}
 		info := &types.Info{
 			Uses: map[*ast.Ident]types.Object{
-				xIdent:  pkgName,
+				xIdent:   pkgName,
 				selIdent: obj,
 			},
 		}

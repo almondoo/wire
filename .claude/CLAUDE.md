@@ -58,13 +58,14 @@ docker compose exec wire-dev sh -c './internal/listdeps.sh > ./internal/alldeps'
 - **`errors_test.go`** — エラーメッセージのテスト
 - **`generate_test.go`** — コード生成ヘルパー（unexport, disambiguate, zeroValue 等）のテスト
 - **`copyast_test.go`** — AST コピーのテスト
+- **`testhelper_test.go`** — テスト用ヘルパー関数
 - **`benchmark_test.go`** — パフォーマンスベンチマーク
 
 ## プロジェクト固有の規約
 
-- **フォーマット**: `gofmt -s`（簡略化フラグ付き）が必須。これなしでは CI が失敗する。
+- **フォーマット**: `gofmt -s`（簡略化フラグ付き）と `go vet` が必須。これなしでは CI が失敗する。
 - **フィーチャーブランチ**: AI 生成ブランチには `claude/` プレフィックスを使用。
 - **PR はスカッシュマージ**。PR 作成後に `git rebase` や `git push --force` は使わない — 代わりに `git merge` を使う。
 - **依存関係の追跡**: import を追加・変更したら `./internal/listdeps.sh > ./internal/alldeps` で依存関係リストを更新する。CI が Linux でこれをチェックする。
-- **CI マトリックス**: Go 1.19〜1.25 で Linux、macOS、Windows の全環境でテスト実行。
+- **CI マトリックス**: Go の境界値テスト（1.19, 1.24, 1.25）で Linux、macOS、Windows の全環境でテスト実行。
 - **日本語ドキュメント**: `docs/jp/`、`JP_README.md`、`_tutorial/JP_README.md`、Makefile のコメントは日本語。
