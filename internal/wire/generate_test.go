@@ -214,13 +214,13 @@ func TestDetectOutputDir(t *testing.T) {
 	}{
 		{
 			name:    "single file",
-			paths:   []string{"/a/b/c.go"},
-			wantDir: "/a/b",
+			paths:   []string{filepath.FromSlash("/a/b/c.go")},
+			wantDir: filepath.FromSlash("/a/b"),
 		},
 		{
 			name:    "same directory",
-			paths:   []string{"/a/b/c.go", "/a/b/d.go"},
-			wantDir: "/a/b",
+			paths:   []string{filepath.FromSlash("/a/b/c.go"), filepath.FromSlash("/a/b/d.go")},
+			wantDir: filepath.FromSlash("/a/b"),
 		},
 		{
 			name:    "no files",
@@ -229,7 +229,7 @@ func TestDetectOutputDir(t *testing.T) {
 		},
 		{
 			name:    "different directories",
-			paths:   []string{"/a/b/c.go", "/x/y/z.go"},
+			paths:   []string{filepath.FromSlash("/a/b/c.go"), filepath.FromSlash("/x/y/z.go")},
 			wantErr: true,
 		},
 	}

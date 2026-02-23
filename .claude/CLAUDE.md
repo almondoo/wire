@@ -67,5 +67,5 @@ docker compose exec wire-dev sh -c './internal/listdeps.sh > ./internal/alldeps'
 - **フィーチャーブランチ**: AI 生成ブランチには `claude/` プレフィックスを使用。
 - **PR はスカッシュマージ**。PR 作成後に `git rebase` や `git push --force` は使わない — 代わりに `git merge` を使う。
 - **依存関係の追跡**: import を追加・変更したら `./internal/listdeps.sh > ./internal/alldeps` で依存関係リストを更新する。CI が Linux でこれをチェックする。
-- **CI マトリックス**: Go の境界値テスト（1.19, 1.24, 1.25）で Linux、macOS、Windows の全環境でテスト実行。
+- **CI マトリックス**: Go の境界値テスト（1.19, 1.24, 1.25, 1.26）で Linux、macOS、Windows の全環境でテスト実行。
 - **日本語ドキュメント**: `docs/jp/`、`JP_README.md`、`_tutorial/JP_README.md`、Makefile のコメントは日本語。
