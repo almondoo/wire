@@ -8,7 +8,9 @@
       "Bash(docker exec:*)",
       "Bash(docker rm:*)",
       "Bash(git log:*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs"
     ],
     "deny": [],
     "ask": []
