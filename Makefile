@@ -1,4 +1,4 @@
-.PHONY: help build up down test
+.PHONY: help build up down test lint shell
 
 .DEFAULT_GOAL := help
 
@@ -25,3 +25,10 @@ down: ## 開発環境を停止・削除
 
 test: ## 全テスト実行（CI と同等）
 	docker compose exec wire-dev go test -mod=readonly -race ./...
+
+lint: ## gofmt + go vet
+	docker compose exec wire-dev go vet ./...
+	docker compose exec wire-dev sh -c 'test -z "$$(gofmt -s -l . | grep -v testdata)"' || { echo "run: gofmt -s -w ."; exit 1; }
+
+shell: ## 開発コンテナに入る
+	docker compose exec wire-dev /bin/bash
