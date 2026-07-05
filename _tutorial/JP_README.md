@@ -3,7 +3,7 @@
 例を通じてWireの使い方を学びましょう。[Wireガイド][guide]はツールの使用方法について詳細なドキュメントを提供しています。より大規模なサーバーにWireが適用されているのを見たい読者には、[Go Cloudのゲストブックサンプル][guestbook]がコンポーネントの初期化にWireを使用しています。ここでは、Wireの使い方を理解するために小さなgreeterプログラムを構築します。完成品はこのREADMEと同じディレクトリにあります。
 
 [guestbook]: https://github.com/google/go-cloud/tree/master/samples/guestbook
-[guide]:     https://github.com/almondoo/wire/blob/master/docs/guide.md
+[guide]:     https://github.com/almondoo/wire/blob/main/docs/guide.md
 
 ## Greeterプログラムを構築する最初のパス
 
@@ -327,8 +327,8 @@ wire: generate failed
 
 最後に、Wireはここで説明されていない多数の追加機能をサポートしていることを述べる価値があります。プロバイダは[プロバイダセット][sets]にグループ化できます。[インターフェースのバインディング][interfaces]、[値のバインディング][values]、および[クリーンアップ関数][cleanup]のサポートがあります。詳細については、[高度な機能][advanced]セクションを参照してください。
 
-[advanced]:   https://github.com/almondoo/wire/blob/master/docs/guide.md#advanced-features
-[cleanup]:    https://github.com/almondoo/wire/blob/master/docs/guide.md#cleanup-functions
-[interfaces]: https://github.com/almondoo/wire/blob/master/docs/guide.md#binding-interfaces
-[sets]:       https://github.com/almondoo/wire/blob/master/docs/guide.md#defining-providers
-[values]:     https://github.com/almondoo/wire/blob/master/docs/guide.md#binding-values
+[advanced]:   https://github.com/almondoo/wire/blob/main/docs/guide.md#advanced-features
+[cleanup]:    https://github.com/almondoo/wire/blob/main/docs/guide.md#cleanup-functions
+[interfaces]: https://github.com/almondoo/wire/blob/main/docs/guide.md#binding-interfaces
+[sets]:       https://github.com/almondoo/wire/blob/main/docs/guide.md#defining-providers
+[values]:     https://github.com/almondoo/wire/blob/main/docs/guide.md#binding-values
