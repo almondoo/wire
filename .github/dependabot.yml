@@ -12,6 +12,14 @@ updates:
       # golang.org/x/tools は v0.25.0 以降 Go 1.22+ を要求し、Go 1.19 サポートと非互換(#21/#28/#32/#35)
       - dependency-name: "golang.org/x/tools"
         versions: [">= 0.25.0"]
+      # golang.org/x/mod は v0.21.0 以降 Go 1.22+ を要求し、Go 1.19 サポートと非互換
+      # (indirect のため通常の version update 対象外だが、security update の抑止として設定)
+      - dependency-name: "golang.org/x/mod"
+        versions: [">= 0.21.0"]
+      # golang.org/x/sync は v0.12.0 以降 Go 1.23+ を要求し、Go 1.19 サポートと非互換
+      # (v0.11.0 までは Go 1.19 互換のため ignore 範囲に含めない)
+      - dependency-name: "golang.org/x/sync"
+        versions: [">= 0.12.0"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
