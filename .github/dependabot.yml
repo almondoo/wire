@@ -8,6 +8,10 @@ updates:
       prefix: "deps"
     labels:
       - "dependencies"
+    ignore:
+      # golang.org/x/tools は v0.25.0 以降 Go 1.22+ を要求し、Go 1.19 サポートと非互換(#21/#28/#32/#35)
+      - dependency-name: "golang.org/x/tools"
+        versions: [">= 0.25.0"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
