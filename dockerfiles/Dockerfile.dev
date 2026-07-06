@@ -1,5 +1,5 @@
 # 開発用Dockerfile
-FROM golang:alpine
+FROM golang:1.26-alpine
 
 # 必要なパッケージのインストール
 RUN apk add --no-cache \

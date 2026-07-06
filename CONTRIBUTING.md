@@ -12,10 +12,9 @@ that isn't working for you.
 ### Bugs
 
 If your issue is a bug, open one
-[here](https://github.com/almondoo/wire/issues/new). The easiest way to file an
-issue with all the right information is to run `go bug`. `go bug` will print out
-a handy template of questions and system information that will help us get to
-the root of the issue quicker.
+[here](https://github.com/almondoo/wire/issues/new). Please include your Go
+version, OS, and Wire version, along with a clear description of the problem,
+so we can get to the root of the issue quicker.
 
 ### Changes
 
@@ -25,13 +24,9 @@ issue with the necessary details.
 
 ### Triaging
 
-The Go Cloud team triages issues at least every two weeks, but usually within
-two business days. Bugs or feature requests are either placed into a **Sprint**
-milestone which means the issue is intended to be worked on. Issues that we
-would like to address but do not have time for are placed into the [Unplanned][]
-milestone.
-
-[Unplanned]: https://github.com/almondoo/wire/milestone/1
+This fork is maintained by a single maintainer on a best-effort basis. Issues
+are triaged as time allows, and since the project is feature-complete, only
+bug reports and fixes are being accepted at this time.
 
 ## Contributing Code
 
@@ -44,11 +39,9 @@ change and then reviewing the implementation separately.
 
 ### Finding something to work on
 
-If you want to write some code, but don't know where to start or what you might
-want to do, take a look at our [Unplanned][] milestone. This is where you can
-find issues we would like to address but can't currently find time for. See if
-any of the latest ones look interesting! If you need help before you can start
-work, you can comment on the issue and we will try to help as best we can.
+If you want to write some code, take a look at the [open issues](https://github.com/almondoo/wire/issues)
+labeled as bugs. If you need help before you can start work, you can comment
+on the issue and we will try to help as best we can.
 
 ### Contributor License Agreement
 
@@ -60,8 +53,8 @@ retain the copyright to your contribution.
 
 *   Follow the normal
     [pull request flow](https://help.github.com/articles/creating-a-pull-request/)
-*   Build your changes using Go 1.11 with Go modules enabled. Wire's continuous
-    integration uses Go modules in order to ensure
+*   Build your changes using Go 1.19 or later with Go modules enabled. Wire's
+    continuous integration uses Go modules in order to ensure
     [reproducible builds](https://research.swtch.com/vgo-repro).
 *   Test your changes using `go test ./...`. Please add tests that show the
     change does what it says it does, even if there wasn't a test in the first
@@ -90,7 +83,7 @@ request. GitHub notifications can be noisy, and it is unfortunately easy for
 things to be lost in the shuffle.
 
 Once your PR is approved (hooray!) the reviewer will squash your commits into a
-single commit, and then merge the commit onto the Wire master branch. Thank you!
+single commit, and then merge the commit onto the Wire main branch. Thank you!
 
 ## Github code review workflow conventions
 
@@ -109,8 +102,6 @@ As a contributor:
     submitted until they approve. If you choose multiple Assignees, wait until
     all of them approve. It is fine to ask someone if they are OK with being
     removed as an Assignee.
-    -   Note that if you don't select any assignees, ContributeBot will turn all
-        of your Reviewers into Assignees.
 -   Make as many commits as you want locally, but try not to push them to Github
     until you've addressed comments; this allows the email notification about
     the push to be a signal to reviewers that the PR is ready to be looked at
@@ -124,7 +115,7 @@ As a contributor:
 -   Do not use `git push --force`; this can cause comments from your reviewers
     that are associated with a specific commit to be lost. This implies that
     once you've sent a Pull Request, you should use `git merge` instead of `git
-    rebase` to incorporate commits from the master branch.
+    rebase` to incorporate commits from the main branch.
 
 As a reviewer:
 
