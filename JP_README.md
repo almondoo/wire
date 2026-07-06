@@ -39,7 +39,7 @@ go install github.com/almondoo/wire/cmd/wire@latest
 
 ## プロジェクトの状況
 
-バージョンv0.3.0の時点で、Wireは*ベータ版*であり、機能は完成していると考えられています。設計された目的のタスクについてはうまく機能しており、可能な限りシンプルに保つことを優先しています。
+バージョンv1.0.0の時点で、Wireは*安定版*であり、機能は完成していると考えられています。設計された目的のタスクについてはうまく機能しており、可能な限りシンプルに保つことを優先しています。
 
 現時点では新機能の受け入れは行っていませんが、バグレポートと修正については喜んで受け付けます。
 
@@ -50,4 +50,3 @@ go install github.com/almondoo/wire/cmd/wire@latest
 このプロジェクトはGoの[行動規範][]の対象です。
 
 [行動規範]: ./CODE_OF_CONDUCT.md
-[go-cloud mailing list]: https://groups.google.com/forum/#!forum/go-cloud

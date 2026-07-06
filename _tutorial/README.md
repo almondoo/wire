@@ -8,7 +8,7 @@ understand how to use Wire. The finished product may be found in the same
 directory as this README.
 
 [guestbook]: https://github.com/google/go-cloud/tree/master/samples/guestbook
-[guide]:     https://github.com/almondoo/wire/blob/master/docs/guide.md
+[guide]:     https://github.com/almondoo/wire/blob/main/docs/guide.md
 
 ## A First Pass of Building the Greeter Program
 
@@ -412,8 +412,8 @@ There is support for [binding interfaces][interfaces], [binding
 values][values], as well as support for [cleanup functions][cleanup]. See the
 [Advanced Features][advanced] section for more.
 
-[advanced]:   https://github.com/almondoo/wire/blob/master/docs/guide.md#advanced-features
-[cleanup]:    https://github.com/almondoo/wire/blob/master/docs/guide.md#cleanup-functions
-[interfaces]: https://github.com/almondoo/wire/blob/master/docs/guide.md#binding-interfaces
-[sets]:       https://github.com/almondoo/wire/blob/master/docs/guide.md#defining-providers
-[values]:     https://github.com/almondoo/wire/blob/master/docs/guide.md#binding-values
+[advanced]:   https://github.com/almondoo/wire/blob/main/docs/guide.md#advanced-features
+[cleanup]:    https://github.com/almondoo/wire/blob/main/docs/guide.md#cleanup-functions
+[interfaces]: https://github.com/almondoo/wire/blob/main/docs/guide.md#binding-interfaces
+[sets]:       https://github.com/almondoo/wire/blob/main/docs/guide.md#defining-providers
+[values]:     https://github.com/almondoo/wire/blob/main/docs/guide.md#binding-values

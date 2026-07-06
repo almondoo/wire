@@ -4,8 +4,7 @@ about: Create a report to help us improve Wire
 
 ---
 
-You can use `go bug` to have a cool, automatically filled out bug template, or
-fill out the template below.
+Please include your Go version and OS along with the details below.
 
 ### Describe the bug
 

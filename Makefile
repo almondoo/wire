@@ -1,4 +1,4 @@
-.PHONY: help build up down test lint shell
+.PHONY: help ps build up down test test-full lint shell
 
 .DEFAULT_GOAL := help
 
@@ -25,6 +25,13 @@ down: ## 開発環境を停止・削除
 
 test: ## 全テスト実行（CI と同等）
 	docker compose exec wire-dev go test -mod=readonly -race ./...
+
+test-full: ## Docker 起動→全テスト実行→停止までを一発実行
+	docker compose up -d --build
+	docker compose exec -T wire-dev go test -mod=readonly -race ./...; \
+	status=$$?; \
+	docker compose down; \
+	exit $$status
 
 lint: ## gofmt + go vet
 	docker compose exec wire-dev go vet ./...

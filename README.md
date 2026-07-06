@@ -44,7 +44,7 @@ and ensuring that `$GOPATH/bin` is added to your `$PATH`.
 
 ## Project status
 
-As of version v0.3.0, Wire is *beta* and is considered feature complete. It
+As of version v1.0.0, Wire is *stable* and is considered feature complete. It
 works well for the tasks it was designed to perform, and we prefer to keep it
 as simple as possible.
 
@@ -58,4 +58,3 @@ For questions, please use [GitHub Discussions](https://github.com/almondoo/wire/
 This project is covered by the Go [Code of Conduct][].
 
 [Code of Conduct]: ./CODE_OF_CONDUCT.md
-[go-cloud mailing list]: https://groups.google.com/forum/#!forum/go-cloud
