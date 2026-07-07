@@ -1,0 +1,79 @@
+# Copyright 2026 The Wire Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Weekly check that Wire still builds/tests/lints cleanly against the latest
+# two upstream Go releases ("stable" and "oldstable", per actions/setup-go).
+# This does NOT query the Go release API; it simply re-runs the existing
+# internal/runtests.sh against whatever actions/setup-go resolves those two
+# labels to at run time. On failure it files (or comments on) a GitHub Issue
+# labeled "go-version-check" (see internal/reportgocompat.sh).
+#
+# Known limitation: GitHub automatically disables scheduled workflows in
+# public repos after 60 days with no repository activity. This repo already
+# carries the same risk for .github/workflows/codeql.yml's weekly schedule;
+# we accept it here too rather than adding a dedicated keepalive job. If this
+# workflow ever silently stops running, re-enable it from the Actions tab or
+# `gh workflow enable go-compat.yml`.
+name: Go Version Compatibility
+
+on:
+  schedule:
+    - cron: "0 5 * * 3" # Wednesdays 05:00 UTC (offset from codeql.yml's Monday run)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: [stable, oldstable]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        with:
+          go-version: ${{ matrix.go-version }}
+          # Without this, setup-go prefers the runner's tool cache and can
+          # miss a Go release published before the runner image caught up.
+          check-latest: true
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 1
+      - name: Run Tests
+        shell: bash
+        run: "internal/runtests.sh"
+
+  report-failure:
+    needs: check
+    if: failure()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      issues: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 1
+      - name: File or update compatibility issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: "internal/reportgocompat.sh"
