@@ -29,3 +29,9 @@ updates:
       prefix: "ci"
     labels:
       - "ci"
+    groups:
+      # codeql-action は init/autobuild/analyze の全ステップが同一バージョンで
+      # ないと Analyze が失敗するため、個別 PR ではなく 1 つの PR にまとめる
+      codeql-action:
+        patterns:
+          - "github/codeql-action*"
