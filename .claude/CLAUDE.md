@@ -38,6 +38,7 @@ docker compose exec wire-dev gofmt -s -w .
 - `_tutorial/` は `_` 始まりディレクトリのため `go build/test/vet ./...` の対象外だが、`gofmt -s` チェックの対象には含まれる。
 - 生成コード(wire_gen.go)のビルドタグは `format.Source` 経由で新旧両形式(`//go:build` + `// +build`)が出力される。
 - `internal/wire/integration_test.go` は `GOPROXY=off` で動作する(テストにネットワークは不要)。
+- `.github/workflows/go-compat.yml` が週次 cron で Go の stable/oldstable に対する互換性チェックを実行し、失敗時は `internal/reportgocompat.sh` が `go-version-check` ラベルで重複防止しつつ Issue を自動起票する。public リポジトリの scheduled workflow は 60 日間リポジトリに活動がないと自動停止される点に注意。
 
 ## ドキュメント規約
 
